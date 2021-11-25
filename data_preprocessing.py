@@ -12,14 +12,17 @@ import matplotlib.pyplot as plt
 from keras.models import Sequential
 from keras.layers import Dense
 import n_beats
+import tensorflow as tf
+import mlp
 
 
-file_path = 'tourism_dataset/monthly_oos.csv'
-forecast_length = 1
+file_path = 'tourism_dataset/monthly_in.csv'
+forecast_length = 2
 backcast_length = 10
 split_ratio = 0.8
 
 
+# This is a bulk method because other methods are being called in this method and nothing more. 
 def data_preprocessing(file_path):
   dataframe = pd.read_csv(file_path)
   data = data_normalization(dataframe)
@@ -30,6 +33,8 @@ def data_preprocessing(file_path):
   return x_train, y_train, x_test, y_test
 
 
+# The dataset values are being normalized in the range(0,1). This will make the model to 
+# learn fast and easily.
 def data_normalization(arr):
   scaler = MinMaxScaler()
   scaler.fit(arr)
@@ -37,7 +42,10 @@ def data_normalization(arr):
 
   return arr.flatten()
 
+input 
 
+
+# Input features to the corresponding output are being defined in this method.
 def data_sequencing(data):
   x, y = [], []
   steps = 1
@@ -48,12 +56,14 @@ def data_sequencing(data):
   return x, y
 
 
+# Eradicates rows containing the missing values in the dataset.
 def data_interpolation(data):
   data = data[~(np.isnan(data))]
 
   return data
 
 
+# Data is splitted into train and test sets following the ratio of 80:20.
 def data_splitting(x, y):
   c = int(len(x) * 0.8)
   x_train, y_train = x[:c], y[:c]
@@ -62,8 +72,23 @@ def data_splitting(x, y):
   return x_train, y_train, x_test, y_test
 
 
+# Multilayer perceptron model is being compiled and trained and nothing more.
+def mlp_model(x_train, y_train):
+  model = Sequential()
+  model.add(Dense(100, activation='relu', input_dim=backcast_length))
+  model.add(Dense(forecast_length))
+  model.compile(optimizer='adam', loss='mse', metrics=[tf.keras.metrics.Accuracy()])
+  model.fit(tf.stack(x_train), tf.stack(y_train), epochs=2000, verbose=1)
 
 
+# Calling the bulk action to start the data preprocessing flow.
 x_train, y_train, x_test, y_test = data_preprocessing(file_path)
+
+# Initializing the N-beats model 
 model, optimiser = n_beats.architecture(backcast_length, forecast_length)
+
+# train the N-beats model
 n_beats.training(model, optimiser, x_train, y_train, x_test, y_test)
+
+# Initialize and train the N-beats model
+mlp.training(x_train, y_train, x_test, y_test)

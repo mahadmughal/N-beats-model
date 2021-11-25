@@ -9,10 +9,15 @@ from sklearn.metrics import r2_score
 
 
 CHECKPOINT_NAME = 'n_beats_trained_model.th'
-forecast_length = 1
+
+# forecase_length defined the count of outputs to predict given the input sample.
+forecast_length = 2
+# backcast_length defined the count of input features to predict the output.
 backcast_length = 10
+# Divides the dataset into batches for training.
 batch_size = 4
 
+# splitting the dataset into batches following the batch size variable defined early.
 def data_generator(x, y, size):
     assert len(x) == len(y)
     batches = []
@@ -22,6 +27,7 @@ def data_generator(x, y, size):
         yield batch
 
 
+# Save the model into the folder.
 def save(model, optimiser, grad_step=0):
     torch.save({
         'grad_step': grad_step,
@@ -30,11 +36,13 @@ def save(model, optimiser, grad_step=0):
     }, CHECKPOINT_NAME)
 
 
+# Draw the scattering plots for visualisation.
 def plot_scatter(*args, **kwargs):
     plt.plot(*args, **kwargs)
     plt.scatter(*args, **kwargs)
 
 
+# Defining the architecture of the N-beats model to train.
 def architecture(backcast_length, forecast_length):
   model = NBeatsNet(
         stack_types=(NBeatsNet.GENERIC_BLOCK, NBeatsNet.GENERIC_BLOCK),
@@ -47,6 +55,7 @@ def architecture(backcast_length, forecast_length):
   return model, optimiser
 
 
+# Training loop over number of epochs.
 def training(model, optimiser, x_train, y_train, x_test, y_test):
   grad_step = 0
   for epoch in range(400):
