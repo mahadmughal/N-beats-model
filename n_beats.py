@@ -18,6 +18,7 @@ backcast_length = 10
 batch_size = 4
 
 # splitting the dataset into batches following the batch size variable defined early.
+
 def data_generator(x, y, size):
     assert len(x) == len(y)
     batches = []
@@ -43,6 +44,8 @@ def plot_scatter(*args, **kwargs):
 
 
 # Defining the architecture of the N-beats model to train.
+
+
 def architecture(backcast_length, forecast_length):
   model = NBeatsNet(
         stack_types=(NBeatsNet.GENERIC_BLOCK, NBeatsNet.GENERIC_BLOCK),

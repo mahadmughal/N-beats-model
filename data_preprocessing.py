@@ -72,15 +72,6 @@ def data_splitting(x, y):
   return x_train, y_train, x_test, y_test
 
 
-# Multilayer perceptron model is being compiled and trained and nothing more.
-def mlp_model(x_train, y_train):
-  model = Sequential()
-  model.add(Dense(100, activation='relu', input_dim=backcast_length))
-  model.add(Dense(forecast_length))
-  model.compile(optimizer='adam', loss='mse', metrics=[tf.keras.metrics.Accuracy()])
-  model.fit(tf.stack(x_train), tf.stack(y_train), epochs=2000, verbose=1)
-
-
 # Calling the bulk action to start the data preprocessing flow.
 x_train, y_train, x_test, y_test = data_preprocessing(file_path)
 
