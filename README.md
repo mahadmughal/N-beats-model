@@ -1,7 +1,7 @@
 ﻿**N-beats & MLP time-series predictive analysis**
 18.11.2021
 ─
-
+To run the project, apply 'python3 data_preprocessing' command in the terminal. 
 
 **Introduction**
 The main aim of this project is the analysis of the N-BEATS neural network and MLP models used in time-series predictive analysis. The N-BEATS model is usually abbreviated as neural basis expansion analysis for interpretable time-series forecasting. On the other hand, MLP is defined as the multilayer perceptron for feed-forward neural networks. The comprehensive analysis of both models is done using a tourism dataset contained by csv files. The detailed analysis of both the models and the dataset is done in succeeding sections.
